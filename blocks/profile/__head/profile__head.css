@@ -1,0 +1,12 @@
+.profile__head {
+    display: flex;
+    align-items: baseline;
+    align-self: flex-end;
+    column-gap: 18px;
+}
+
+@media screen and (max-width: 768px) {
+    .profile__head {
+      column-gap: 10px;
+    }
+  }

@@ -1,0 +1,28 @@
+.popup {
+    margin: 0;
+    position: fixed;
+    top:0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    font-family: "Inter", 'Arial', sans-serif;
+  }
+  
+  @media screen and (max-width: 896px) {
+    .popup {
+      max-width: 896px;
+    }
+  }
+  
+  @media screen and (max-width: 697px) {
+    .popup {
+      max-width: 697px;
+    }
+  }
+  
+  @media screen and (max-width: 320px) {
+    .popup {
+      max-width: 320px;
+    }
+  }
