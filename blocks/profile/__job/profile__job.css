@@ -1,7 +1,7 @@
 .profile__job {
     margin: 0;
     font-size: 18px;
-    max-width: 500px;
+    max-width: 305px;
     line-height: 22px;
     font-weight: 400;
     text-overflow: ellipsis;
@@ -14,7 +14,9 @@
     .profile__job {
       max-width: 280px;
       font-size: 14px;
-      line-height: calc(17 / 14);
+      line-height: 17px;
       align-self: center;
+      padding: 8px 0 0 0;
+      justify-content: center;
     }
   }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./page/index.css">
+    <link rel="stylesheet" href="./pages/index.css">
     <title>Project Mesto</title>
 </head>
 <body class="container">
@@ -19,7 +19,7 @@
                     <img src="./image/avatar.jpg" alt="Аватар" class="profile__avatar">
                 </div>
                 <div class="profile__head">
-                    <h2 class="profile__name">Жак-Ив Кусто</h2>
+                    <h1 class="profile__name">Жак-Ив Кусто</h1>
                     <button type="button" aria-label="edit-button" class="profile__edit-button"></button>
                 </div>
                 <p class="profile__job">Исследователь океана</div>
@@ -81,10 +81,8 @@
         <button type="button" aria-label="Закрыть" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
       <form name="form" class="popup__input-form">
-        <div class="popup__input-container">
-          <input placeholder="Имя" type="text" name="name" class="popup__input">
-          <input placeholder="Работа" type="text" name="description" class="popup__input">
-        </div>
+        <input placeholder="Имя" type="text" name="name" class="popup__input">
+        <input placeholder="Работа" type="text" name="description" class="popup__input">
         <button type="submit" name="button-edit" class="popup__submit">Сохранить</button>
       </form>
     </div>
