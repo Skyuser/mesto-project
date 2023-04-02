@@ -1,4 +1,4 @@
-import { nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupPhoto, popupPhotoUrl, popupPhotoText, templateCard} from '../scripts/index.js';
+import { nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupPhoto, popupPhotoUrl, popupPhotoText, templateCard, elementsGroup, popupAddUrl, popupAddLinkName} from '../scripts/index.js';
 import { openPopup, closePopup } from '../components/modal.js'
 
 function submitFormEdit(evt) {
