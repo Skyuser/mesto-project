@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./pages/index.css">
     <title>Project Mesto</title>
 </head>
 <body class="container">
  <div class="page">
     <header class="header">
-        <img src="./image/logo.svg" alt="Mesto logo" class="header__logo">
+        <img src="<%=require('./image/logo.svg')%>" alt="Mesto logo" class="header__logo">
     </header>
     <main class="content">
         <section class="profile">
             <div class="profile__info">
                 <div class="profile__avatar-base">
-                    <img src="./image/avatar.jpg" alt="Аватар" class="profile__avatar">
+                    <img src="<%=require('./image/avatar.jpg')%>" alt="Аватар" class="profile__avatar">
                 </div>
                 <div class="profile__head">
                     <h1 class="profile__name">Жак-Ив Кусто</h1>
@@ -39,9 +38,31 @@
     <div class="popup__container">
         <button type="button" aria-label="Закрыть" class="popup__close"></button>
       <h3 class="popup__title">Редактировать профиль</h3>
-      <form name="form" class="popup__input-form" id="popup-editform">
-        <input placeholder="Имя" type="text" name="name" class="popup__input" id="name">
-        <input placeholder="Работа" type="text" name="description" class="popup__input" id="description">
+      <form name="form" class="popup__input-form" id="popup-editform" novalidate>
+        <input placeholder="Имя" 
+        type="text" 
+        name="name" 
+        class="popup__input" 
+        id="name" 
+        value =""
+        minlength="2" 
+        maxlength="40"
+        data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+        pattern="^[A-Za-z-А-Яа-яЁё\s\-]+$"  
+        required>
+        <span class="popup__input-error name-error"></span>
+        <input placeholder="Работа" 
+        type="text" 
+        name="description" 
+        class="popup__input" 
+        id="description" 
+        value =""
+        minlength="2" 
+        maxlength="200"
+        data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+        pattern="^[A-Za-z-А-Яа-яЁё\s\-]+$" 
+        required>
+        <span class="popup__input-error description-error"></span>
         <button type="submit" name="button-edit" class="popup__submit">Сохранить</button>
       </form>
     </div>
@@ -50,9 +71,27 @@
     <div class="popup__container">
         <button type="button" aria-label="Закрыть" class="popup__close"></button>
       <h3 class="popup__title">Новое место</h3>
-      <form name="form" class="popup__input-form" id="popup-addform">
-        <input placeholder="Название" type="text" name="linkname" class="popup__input" id="linkname">
-        <input placeholder="Ссылка на картинку" type="url-img" name="description" class="popup__input" id="url-img">
+      <form name="form" class="popup__input-form" id="popup-addform" novalidate>
+        <input placeholder="Название" 
+        type="text" 
+        name="linkname" 
+        class="popup__input" 
+        id="linkname" 
+        value =""
+        minlength="2"
+        maxlength="30"
+        data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+        pattern="^[A-Za-z-А-Яа-яЁё\s\-]+$"  
+        required>
+        <span class="popup__input-error linkname-error"></span>
+        <input placeholder="Ссылка на картинку" 
+        type="url" 
+        name="url-img" 
+        class="popup__input" 
+        id="url-img" 
+        value ="" 
+        required>
+        <span class="popup__input-error url-img-error"></span>
         <button type="submit" name="button-edit" class="popup__submit">Создать</button>
       </form>
     </div>
@@ -74,7 +113,5 @@
         </div>
     </li>
 </template>
-<script src="./scripts/cards.js"></script> 
-<script src="./scripts/index.js"></script> 
 </body>
 </html>

@@ -1,4 +1,12 @@
+import '../pages/index.css';
+
+import { enableValidation } from '../components/validate.js';
+import { initialCards } from '../components/card.js';
+import { openPopup, closePopup } from '../components/modal.js'
+import { submitFormEdit, loadInitials, loadFormAdd, showPhoto } from '../components/utils.js'
+
 // Объявления
+const popupsAll = document.querySelectorAll('.popup')
 const templateCard = document.querySelector('#card').content;
 const buttonEdit = document.querySelector('.profile__edit-button');
 const buttonAdd = document.querySelector('.profile__add-button')
@@ -26,26 +34,31 @@ const popupPhotoUrl = popupPhoto.querySelector('.popup__image');
 const popupPhotoText = popupPhoto.querySelector('.popup__text');
 const popupPhotoCloseButton = popupPhoto.querySelector('.popup__close')
 
-// Открытие/закрытие попапов
-function openPopup (popup) {
-    popup.classList.add('popup_opened');
+const settings = {
+    formSelector: '.popup__input-form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__submit',
+    inactiveButtonClass: 'popup__submit_disabled',
+    inputErrorClass: 'popup__input_invalid',
+    errorClass: 'popup__input-error_active'
 }
 
-function closePopup (popup) {
-    popup.classList.remove('popup_opened');
-}
-
-popupEditClose.addEventListener('click', function() {
-    closePopup(popupEdit);
-})
+// Общее закрытие попапов по оверлею или по крестику/Escape
+popupsAll.forEach((popup) => {
+    popup.addEventListener('mousedown', (evt) => {
+        if (evt.target.classList.contains('popup__close')) {
+            closePopup(popup)
+        }
+        if (evt.target === popup) {
+            closePopup(evt.target);
+          }
+    })
+}) 
 
 buttonAdd.addEventListener('click', function() {
     openPopup(popupAdd);
 })
 
-popupAddClose.addEventListener('click', function() {
-    closePopup(popupAdd);
-})
 
 // Сбор параметров профиля со страницы
 buttonEdit.addEventListener('click', function() {
@@ -54,58 +67,21 @@ buttonEdit.addEventListener('click', function() {
     openPopup(popupEdit);
 })
 
-function submitFormEdit(evt) {
-    evt.preventDefault();
-    nameProfile.textContent = nameEdit.value;
-    jobProfile.textContent = descriptionEdit.value;
-    closePopup(popupEdit);
-}
-
 formEdit.addEventListener('submit', submitFormEdit);
 
-function loadInitials (link, name) {
-    const cardElement = templateCard.querySelector('.element').cloneNode(true);
-    const templateName = cardElement.querySelector('.element__name');
-    const templateImage = cardElement.querySelector('.element__image');
-    const templateLike = cardElement.querySelector('.element__like').addEventListener('click', function(evt){
-        evt.target.classList.toggle('element__like_active')
-    });
-    const templateDelete = cardElement.querySelector('.element__delete-button').addEventListener('click',function(evt){
-        evt.target.closest('.element').remove()
-    });
-
-    templateImage.addEventListener('click',function(evt) {
-        showPhoto(link, name)
-    });
-
-    templateImage.src = link;
-    templateImage.alt = name;
-    templateName.textContent = name;
-
-    return cardElement;
-}
 
 initialCards.forEach(item => {
     elementsGroup.append(loadInitials(item.link, item.name));
 });
 
-function loadFormAdd (evt){
-    evt.preventDefault();
-    elementsGroup.prepend(loadInitials(popupAddUrl.value, popupAddLinkName.value));
-    evt.target.reset();
-    closePopup(popupAdd);
-}
 
 //Сохранение карточек
 formAdd.addEventListener('submit', loadFormAdd);
 
-function showPhoto(link, name) {
-    popupPhotoUrl.src = link;
-    popupPhotoUrl.alt = name;
-    popupPhotoText.textContent = name;
-    openPopup(popupPhoto);
-}
+enableValidation(settings);
 
-popupPhotoCloseButton.addEventListener('click', function(){
-    closePopup(popupPhoto);
-});
+export {settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdit,
+popupEditSaveButton, popupAdd, popupAddSaveButton, popupEditClose,
+popupAddClose, nameProfile, jobProfile, nameEdit, descriptionEdit, formEdit,
+elementsGroup, popupAddLinkName, popupAddUrl, formAdd, popupPhoto,
+popupPhotoUrl, popupPhotoText, popupPhotoCloseButton,}
