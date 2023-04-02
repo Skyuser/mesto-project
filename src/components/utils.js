@@ -1,4 +1,4 @@
-import { nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupPhoto, popupPhotoUrl, popupPhotoText, templateCard, elementsGroup, popupAddUrl, popupAddLinkName} from '../scripts/index.js';
+import { settings, nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupPhoto, popupPhotoUrl, popupPhotoText, templateCard, elementsGroup, popupAddUrl, popupAddLinkName, popupAddSaveButton } from '../pages/index.js';
 import { openPopup, closePopup } from '../components/modal.js'
 
 function submitFormEdit(evt) {
@@ -34,8 +34,14 @@ function loadFormAdd (evt){
     evt.preventDefault();
     elementsGroup.prepend(loadInitials(popupAddUrl.value, popupAddLinkName.value));
     evt.target.reset();
+    disableButton(settings, popupAddSaveButton)
     closePopup(popupAdd);
 }
+
+function disableButton(settings, popupAddSaveButton) {
+    popupAddSaveButton.disabled = true;
+    popupAddSaveButton.classList.add(settings.inactiveButtonClass);
+  }
 
 function showPhoto(link, name) {
     popupPhotoUrl.src = link;
