@@ -14,4 +14,12 @@ function closeEscape(evt) {
     document.removeEventListener('keydown', closeEscape);
   }
   
- export { openPopup, closePopup }
+  function renderLoading(target, isLoading, buttonText, loadingText) {
+    if (isLoading) {
+      target.textContent = loadingText;
+    } else {
+      target.textContent = buttonText;
+    }
+  }
+
+ export { openPopup, closePopup, renderLoading }

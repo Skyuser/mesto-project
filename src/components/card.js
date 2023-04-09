@@ -1,28 +1,75 @@
-const initialCards = [
-    {
-      name: 'Архыз',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-    },
-    {
-      name: 'Челябинская область',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-    },
-    {
-      name: 'Иваново',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-    },
-    {
-      name: 'Камчатка',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-    },
-    {
-      name: 'Холмогорский район',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-    },
-    {
-      name: 'Байкал',
-      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-    }
-  ]; 
+import { popupPhoto, popupPhotoUrl, popupPhotoText, templateCard } from '../pages/index.js';
+import { openPopup } from '../components/modal.js'
+import { deleteCard, putLikeCard, deleteLikeCard } from '../components/api.js'
 
-  export { initialCards }
+function loadInitials (card, user) {
+    const cardElement = templateCard.querySelector('.element').cloneNode(true);
+    const templateName = cardElement.querySelector('.element__name');
+    const templateImage = cardElement.querySelector('.element__image');
+    const templateLike = cardElement.querySelector('.element__like')
+    const templateDelete = cardElement.querySelector('.element__delete-button')
+    const likesValue = cardElement.querySelector('.element__likes-value')
+
+    likesValue.textContent = card.likes.length;
+
+    templateImage.addEventListener('click',function(evt) {
+        showPhoto(card, user)
+    });
+
+    card.likes.forEach((like) => {
+        if(like._id === user) {
+            templateLike.classList.add('element__like_active')
+        }
+    })
+
+    templateLike.addEventListener('click', function (evt) {
+        if(!evt.target.classList.contains('element__like_active')){
+            putLikeCard(card._id)
+            .then((res) => {
+                evt.target.classList.toggle('element__like_active')
+                likesValue.textContent = res.likes.length;
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        } else {
+            deleteLikeCard(card._id)
+            .then((res) => {
+                evt.target.classList.remove('element__like_active')
+                likesValue.textContent = res.likes.length;
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
+    })
+
+    if(user !== card.owner._id) {
+        templateDelete.classList.add('element__delete-button_disabled')
+    }
+
+    templateDelete.addEventListener('click', function(){
+        deleteCard(card._id)
+            .then((res) => {
+                cardElement.remove(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    })
+
+    templateImage.src = card.link;
+    templateImage.alt = card.name;
+    templateName.textContent = card.name;
+
+    return cardElement;
+}
+
+function showPhoto(card) {
+    popupPhotoUrl.src = card.link;
+    popupPhotoUrl.alt = card.name;
+    popupPhotoText.textContent = card.name;
+    openPopup(popupPhoto);
+}
+
+export { loadInitials, showPhoto }

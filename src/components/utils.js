@@ -1,53 +1,66 @@
-import { settings, nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupPhoto, popupPhotoUrl, popupPhotoText, templateCard, elementsGroup, popupAddUrl, popupAddLinkName, popupAddSaveButton } from '../pages/index.js';
-import { openPopup, closePopup } from '../components/modal.js'
+import { settings, nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupAvatar, elementsGroup, popupAddUrl, popupAddLinkName, popupAddSaveButton, avatarInput, popupAvatarSaveButton, userId, avatar } from '../pages/index.js';
+import { closePopup, renderLoading } from '../components/modal.js'
+import { updateMyInformation, postNewCard, updateAvatar} from '../components/api.js'
+import { loadInitials } from './card.js';
 
-function submitFormEdit(evt) {
+function handleSubmit(request, evt) {
     evt.preventDefault();
-    nameProfile.textContent = nameEdit.value;
-    jobProfile.textContent = descriptionEdit.value;
-    closePopup(popupEdit);
-}
-
-function loadInitials (link, name) {
-    const cardElement = templateCard.querySelector('.element').cloneNode(true);
-    const templateName = cardElement.querySelector('.element__name');
-    const templateImage = cardElement.querySelector('.element__image');
-    const templateLike = cardElement.querySelector('.element__like').addEventListener('click', function(evt){
-        evt.target.classList.toggle('element__like_active')
-    });
-    const templateDelete = cardElement.querySelector('.element__delete-button').addEventListener('click',function(evt){
-        evt.target.closest('.element').remove()
-    });
-
-    templateImage.addEventListener('click',function(evt) {
-        showPhoto(link, name)
-    });
-
-    templateImage.src = link;
-    templateImage.alt = name;
-    templateName.textContent = name;
-
-    return cardElement;
-}
-
-function loadFormAdd (evt){
-    evt.preventDefault();
-    elementsGroup.prepend(loadInitials(popupAddUrl.value, popupAddLinkName.value));
-    evt.target.reset();
-    disableButton(settings, popupAddSaveButton)
-    closePopup(popupAdd);
-}
-
-function disableButton(settings, popupAddSaveButton) {
-    popupAddSaveButton.disabled = true;
-    popupAddSaveButton.classList.add(settings.inactiveButtonClass);
+    const submitButton = evt.submitter;
+    const buttonText = submitButton.textContent;
+    const loadingText = "Сохранение..."
+    renderLoading(submitButton, true, buttonText, loadingText);
+    request()
+      .then(() => {
+        evt.target.reset();
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      })
+      .finally(() => {
+        renderLoading(submitButton, false, buttonText, loadingText);
+      });
   }
 
-function showPhoto(link, name) {
-    popupPhotoUrl.src = link;
-    popupPhotoUrl.alt = name;
-    popupPhotoText.textContent = name;
-    openPopup(popupPhoto);
+function submitFormEdit(evt) {
+    function requestForm() {
+    return updateMyInformation(nameEdit.value, descriptionEdit.value)
+        .then((res) => {
+            nameProfile.textContent = res.name
+            jobProfile.textContent = res.about
+            closePopup(popupEdit);
+        })
+    }
+    handleSubmit(requestForm, evt);
 }
 
-export { submitFormEdit, loadInitials, loadFormAdd, showPhoto }
+function handleAvatarUpdate(evt) {
+    function requestForm() {
+      return updateAvatar(avatarInput.value)
+        .then((res) => {
+          avatar.src = res.avatar;
+          evt.target.reset();
+          disableButton(settings, popupAvatarSaveButton);
+          closePopup(popupAvatar);
+        })
+    }
+    handleSubmit(requestForm, evt);
+  }
+
+function loadFormAdd (evt){
+    function requestForm() {
+    return postNewCard(popupAddLinkName.value, popupAddUrl.value)
+        .then((card) => {
+            elementsGroup.prepend(loadInitials(card, userId));
+            disableButton(settings, popupAddSaveButton);
+            closePopup(popupAdd); 
+        })
+    }
+    handleSubmit(requestForm, evt); 
+}
+
+function disableButton(settings, disabledSaveButton) {
+    disabledSaveButton.disabled = true;
+    disabledSaveButton.classList.add(settings.inactiveButtonClass);
+  }
+
+export { submitFormEdit, loadFormAdd, handleAvatarUpdate }
