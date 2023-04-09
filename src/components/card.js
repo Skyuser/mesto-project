@@ -1,6 +1,6 @@
 import { popupPhoto, popupPhotoUrl, popupPhotoText, templateCard } from '../pages/index.js';
 import { openPopup } from '../components/modal.js'
-import { deleteCard, putLikeCard, deleteLikeCard } from '../components/api.js'
+import { deleteCard, putLikeCard, deleteLikeCard, printError } from '../components/api.js'
 
 function loadInitials (card, user) {
     const cardElement = templateCard.querySelector('.element').cloneNode(true);
@@ -22,28 +22,6 @@ function loadInitials (card, user) {
         }
     })
 
-    templateLike.addEventListener('click', function (evt) {
-        if(!evt.target.classList.contains('element__like_active')){
-            putLikeCard(card._id)
-            .then((res) => {
-                evt.target.classList.toggle('element__like_active')
-                likesValue.textContent = res.likes.length;
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        } else {
-            deleteLikeCard(card._id)
-            .then((res) => {
-                evt.target.classList.remove('element__like_active')
-                likesValue.textContent = res.likes.length;
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        }
-    })
-
     if(user !== card.owner._id) {
         templateDelete.classList.add('element__delete-button_disabled')
     }
@@ -53,9 +31,25 @@ function loadInitials (card, user) {
             .then((res) => {
                 cardElement.remove(res);
             })
-            .catch((err) => {
-                console.log(err);
+            .catch(printError)
+    })
+
+    templateLike.addEventListener('click', function (evt) {
+        if(!evt.target.classList.contains('element__like_active')){
+            putLikeCard(card._id)
+            .then((res) => {
+                evt.target.classList.toggle('element__like_active')
+                likesValue.textContent = res.likes.length;
             })
+            .catch(printError)
+        } else {
+            deleteLikeCard(card._id)
+            .then((res) => {
+                evt.target.classList.remove('element__like_active')
+                likesValue.textContent = res.likes.length;
+            })
+            .catch(printError)
+        }
     })
 
     templateImage.src = card.link;

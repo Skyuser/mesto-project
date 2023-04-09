@@ -4,7 +4,7 @@ import { enableValidation } from '../components/validate.js';
 import { loadInitials } from '../components/card.js';
 import { openPopup, closePopup } from '../components/modal.js'
 import { submitFormEdit, loadFormAdd, handleAvatarUpdate } from '../components/utils.js'
-import { getInitialCards, getMyInformation} from '../components/api.js'
+import { getInitialCards, getMyInformation, printError} from '../components/api.js'
 
 // Объявления
 let userId;
@@ -51,20 +51,6 @@ const settings = {
     errorClass: 'popup__input-error_active'
 }
 
-Promise.all([getMyInformation(), getInitialCards()])
-    .then(([user, cards]) => {
-        nameProfile.textContent = user.name
-        jobProfile.textContent = user.about
-        avatar.src = user.avatar
-        userId = user._id
-        cards.forEach((card) => {
-          elementsGroup.append(loadInitials(card, userId))
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-
 // Общее закрытие попапов по оверлею или по крестику/Escape
 popupsAll.forEach((popup) => {
     popup.addEventListener('mousedown', (evt) => {
@@ -98,6 +84,18 @@ avatarBase.addEventListener('click', function() {
 formAdd.addEventListener('submit', loadFormAdd);
 
 popupAvatarForm.addEventListener('submit', handleAvatarUpdate)
+
+Promise.all([getMyInformation(), getInitialCards()])
+    .then(([user, cards]) => {
+        nameProfile.textContent = user.name
+        jobProfile.textContent = user.about
+        avatar.src = user.avatar
+        userId = user._id
+        cards.forEach((card) => {
+          elementsGroup.append(loadInitials(card, userId))
+        });
+    })
+    .catch(printError);
 
 
 enableValidation(settings);

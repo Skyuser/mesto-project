@@ -1,6 +1,6 @@
 import { settings, nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupAvatar, elementsGroup, popupAddUrl, popupAddLinkName, popupAddSaveButton, avatarInput, popupAvatarSaveButton, userId, avatar } from '../pages/index.js';
 import { closePopup, renderLoading } from '../components/modal.js'
-import { updateMyInformation, postNewCard, updateAvatar} from '../components/api.js'
+import { updateMyInformation, postNewCard, updateAvatar, printError} from '../components/api.js'
 import { loadInitials } from './card.js';
 
 function handleSubmit(request, evt) {
@@ -13,9 +13,7 @@ function handleSubmit(request, evt) {
       .then(() => {
         evt.target.reset();
       })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-      })
+      .catch(printError)
       .finally(() => {
         renderLoading(submitButton, false, buttonText, loadingText);
       });

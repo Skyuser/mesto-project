@@ -18,6 +18,10 @@ const config = {
         .then(checkResponse)
   }
 
+  function printError(err) {
+    console.log(`Ошибка: ${err}`);
+  }
+
   function getInitialCards() {
     return checker(`${config.baseUrl}/cards`, {
       headers: config.headers
@@ -83,4 +87,4 @@ const config = {
     })
   }
 
-  export { getInitialCards, getMyInformation, updateMyInformation, postNewCard, deleteCard, putLikeCard, deleteLikeCard, updateAvatar }
+  export { getInitialCards, getMyInformation, updateMyInformation, postNewCard, deleteCard, putLikeCard, deleteLikeCard, updateAvatar, printError }
