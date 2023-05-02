@@ -22,4 +22,6 @@ function closeEscape(evt) {
     }
   }
 
- export { openPopup, closePopup, renderLoading }
+export { openPopup, closePopup, renderLoading }
+ 
+
