@@ -1,6 +1,7 @@
-import { popupPhoto, popupPhotoUrl, popupPhotoText, templateCard } from '../pages/index.js';
+import { api, popupPhoto, popupPhotoUrl, popupPhotoText, templateCard } from '../pages/index.js';
 import { openPopup } from '../components/modal.js'
-import { deleteCard, putLikeCard, deleteLikeCard, printError } from '../components/api.js'
+import { printError } from '../components/utils.js'
+
 
 function loadInitials (card, user) {
     const cardElement = templateCard.querySelector('.element').cloneNode(true);
@@ -27,7 +28,7 @@ function loadInitials (card, user) {
     }
 
     templateDelete.addEventListener('click', function(){
-        deleteCard(card._id)
+        api.deleteCard(card._id)
             .then((res) => {
                 cardElement.remove(res);
             })
@@ -36,14 +37,14 @@ function loadInitials (card, user) {
 
     templateLike.addEventListener('click', function (evt) {
         if(!evt.target.classList.contains('element__like_active')){
-            putLikeCard(card._id)
+            api.putLikeCard(card._id)
             .then((res) => {
                 evt.target.classList.toggle('element__like_active')
                 likesValue.textContent = res.likes.length;
             })
             .catch(printError)
         } else {
-            deleteLikeCard(card._id)
+            api.deleteLikeCard(card._id)
             .then((res) => {
                 evt.target.classList.remove('element__like_active')
                 likesValue.textContent = res.likes.length;

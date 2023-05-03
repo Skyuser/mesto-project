@@ -61,4 +61,20 @@ function disableButton(settings, disabledSaveButton) {
     disabledSaveButton.classList.add(settings.inactiveButtonClass);
   }
 
-export { submitFormEdit, loadFormAdd, handleAvatarUpdate }
+  function checkResponse(res) {   
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  
+  function checker(url, data) {
+    return fetch(url, data)
+        .then(checkResponse)
+  }
+
+  function printError(err) {
+    console.log(`Ошибка: ${err}`);
+  }
+
+export { submitFormEdit, loadFormAdd, handleAvatarUpdate, checker, printError }

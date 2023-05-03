@@ -4,7 +4,8 @@ import { enableValidation } from '../components/validate.js';
 import { loadInitials } from '../components/card.js';
 import { openPopup, closePopup } from '../components/modal.js'
 import { submitFormEdit, loadFormAdd, handleAvatarUpdate } from '../components/utils.js'
-import { getInitialCards, getMyInformation, printError} from '../components/api.js'
+import { printError } from '../components/utils'
+import Api from '../components/api.js'
 
 // Объявления
 let userId;
@@ -51,6 +52,14 @@ const settings = {
     errorClass: 'popup__input-error_active'
 }
 
+const api = new Api({
+    baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-22',
+    headers: {
+      authorization: '0084e260-948c-41b3-ba88-e14a4fb1558a',
+      'Content-Type': 'application/json'
+    }
+  });
+
 // Общее закрытие попапов по оверлею или по крестику/Escape
 popupsAll.forEach((popup) => {
     popup.addEventListener('mousedown', (evt) => {
@@ -85,7 +94,7 @@ formAdd.addEventListener('submit', loadFormAdd);
 
 popupAvatarForm.addEventListener('submit', handleAvatarUpdate)
 
-Promise.all([getMyInformation(), getInitialCards()])
+Promise.all([api._getMyInformation(), api._getInitialCards()])
     .then(([user, cards]) => {
         nameProfile.textContent = user.name
         jobProfile.textContent = user.about
@@ -100,7 +109,7 @@ Promise.all([getMyInformation(), getInitialCards()])
 
 enableValidation(settings);
 
-export {settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdit,
+export { api, settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdit,
 popupEditSaveButton, popupAdd, popupAddSaveButton, popupEditClose,
 popupAddClose, nameProfile, jobProfile, nameEdit, descriptionEdit, formEdit,
 elementsGroup, popupAddLinkName, popupAddUrl, formAdd, popupPhoto,
