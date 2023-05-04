@@ -3,9 +3,9 @@ import '../pages/index.css';
 import { enableValidation } from '../components/validate.js';
 import { loadInitials } from '../components/card.js';
 import { openPopup, closePopup } from '../components/modal.js'
-import { submitFormEdit, loadFormAdd, handleAvatarUpdate } from '../components/utils.js'
-import { printError } from '../components/utils'
+import { submitFormEdit, loadFormAdd, handleAvatarUpdate, printError } from '../components/utils.js'
 import Api from '../components/api.js'
+import UserInfo from '../components/UserInfo';
 
 // Объявления
 let userId;
@@ -42,6 +42,9 @@ const popupPhoto = document.querySelector('#popup-photo');
 const popupPhotoUrl = popupPhoto.querySelector('.popup__image');
 const popupPhotoText = popupPhoto.querySelector('.popup__text');
 const popupPhotoCloseButton = popupPhoto.querySelector('.popup__close');
+const username = ('.profile__name');
+const description = ('.profile__job');
+const ava = ('.profile__avatar');
 
 const settings = {
     formSelector: '.popup__input-form',
@@ -59,6 +62,9 @@ const api = new Api({
       'Content-Type': 'application/json'
     }
   });
+
+
+const userInfo = new UserInfo(username, description, ava);
 
 // Общее закрытие попапов по оверлею или по крестику/Escape
 popupsAll.forEach((popup) => {
@@ -96,10 +102,7 @@ popupAvatarForm.addEventListener('submit', handleAvatarUpdate)
 
 Promise.all([api._getMyInformation(), api._getInitialCards()])
     .then(([user, cards]) => {
-        nameProfile.textContent = user.name
-        jobProfile.textContent = user.about
-        avatar.src = user.avatar
-        userId = user._id
+        userInfo.setUserInfo(user.name, user.about, user.avatar, user._id);
         cards.forEach((card) => {
           elementsGroup.append(loadInitials(card, userId))
         });
@@ -113,4 +116,4 @@ export { api, settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdi
 popupEditSaveButton, popupAdd, popupAddSaveButton, popupEditClose,
 popupAddClose, nameProfile, jobProfile, nameEdit, descriptionEdit, formEdit,
 elementsGroup, popupAddLinkName, popupAddUrl, formAdd, popupPhoto,
-popupPhotoUrl, popupPhotoText, popupAvatar, popupPhotoCloseButton, avatarInput, popupAvatarSaveButton, userId, avatar }
+popupPhotoUrl, popupPhotoText, popupAvatar, popupPhotoCloseButton, avatarInput, popupAvatarSaveButton, userId, avatar, userInfo }

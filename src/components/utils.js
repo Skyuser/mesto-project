@@ -1,6 +1,6 @@
-import { settings, nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupAvatar, elementsGroup, popupAddUrl, popupAddLinkName, popupAddSaveButton, avatarInput, popupAvatarSaveButton, userId, avatar } from '../pages/index.js';
+import { settings, nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupAvatar, elementsGroup, popupAddUrl, popupAddLinkName, popupAddSaveButton, avatarInput, popupAvatarSaveButton, userId, avatar, userInfo } from '../pages/index.js';
 import { closePopup, renderLoading } from '../components/modal.js'
-import { updateMyInformation, postNewCard, updateAvatar, printError} from '../components/api.js'
+import { api } from '../pages/index.js';
 import { loadInitials } from './card.js';
 
 function handleSubmit(request, evt) {
@@ -21,11 +21,11 @@ function handleSubmit(request, evt) {
 
 function submitFormEdit(evt) {
     function requestForm() {
-    return updateMyInformation(nameEdit.value, descriptionEdit.value)
-        .then((res) => {
-            nameProfile.textContent = res.name
-            jobProfile.textContent = res.about
-            closePopup(popupEdit);
+    const data = userInfo.getUserInfo()
+    return api.updateMyInformation(data) // Только начал редактировать. Пока не работает! 
+        .then((data) => {
+          userInfo.setUserInfo(data.name, data.about)
+          closePopup(popupEdit);
         })
     }
     handleSubmit(requestForm, evt);

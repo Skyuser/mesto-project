@@ -5,13 +5,13 @@ export default class Api {
     this._headers = options.headers
     }
 
-  getInitialCards() {
+  _getInitialCards() {
     return checker(`${this._baseUrl}/cards`, {
         headers: this._headers
       })
     }
     
-  getMyInformation() {
+  _getMyInformation() {
     return checker(`${this._baseUrl}/users/me`, {
         headers: this._headers
       })
