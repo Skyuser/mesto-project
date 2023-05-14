@@ -1,11 +1,16 @@
 import "../pages/index.css";
 
-import { enableValidation } from '../components/validate.js';
-import { loadInitials } from '../components/card.js';
-import { openPopup, closePopup } from '../components/modal.js'
-import { submitFormEdit, loadFormAdd, handleAvatarUpdate, printError } from '../components/utils.js'
-import Api from '../components/api.js'
-import UserInfo from '../components/UserInfo';
+import { enableValidation } from "../components/validate.js";
+import { loadInitials } from "../components/card.js";
+import { openPopup, closePopup } from "../components/modal.js";
+import {
+  submitFormEdit,
+  loadFormAdd,
+  handleAvatarUpdate,
+  printError,
+} from "../components/utils.js";
+import Api from "../components/api.js";
+import UserInfo from "../components/UserInfo";
 
 // Объявления
 let userId;
@@ -38,31 +43,30 @@ const popupAddLinkName = popupAdd.querySelector("#linkname");
 const popupAddUrl = popupAdd.querySelector("#url-img");
 const formAdd = popupAdd.querySelector("#popup-addform");
 //Превью изображения
-const popupPhoto = document.querySelector('#popup-photo');
-const popupPhotoUrl = popupPhoto.querySelector('.popup__image');
-const popupPhotoText = popupPhoto.querySelector('.popup__text');
-const popupPhotoCloseButton = popupPhoto.querySelector('.popup__close');
-const username = ('.profile__name');
-const description = ('.profile__job');
-const ava = ('.profile__avatar');
+const popupPhoto = document.querySelector("#popup-photo");
+const popupPhotoUrl = popupPhoto.querySelector(".popup__image");
+const popupPhotoText = popupPhoto.querySelector(".popup__text");
+const popupPhotoCloseButton = popupPhoto.querySelector(".popup__close");
+const username = ".profile__name";
+const description = ".profile__job";
+const ava = ".profile__avatar";
 
 const settings = {
-    formSelector: '.popup__input-form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__submit',
-    inactiveButtonClass: 'popup__submit_disabled',
-    inputErrorClass: 'popup__input_invalid',
-    errorClass: 'popup__input-error_active'
-}
+  formSelector: ".popup__input-form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__submit",
+  inactiveButtonClass: "popup__submit_disabled",
+  inputErrorClass: "popup__input_invalid",
+  errorClass: "popup__input-error_active",
+};
 
 const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-22',
-    headers: {
-      authorization: '0084e260-948c-41b3-ba88-e14a4fb1558a',
-      'Content-Type': 'application/json'
-    }
-  });
-
+  baseUrl: "https://mesto.nomoreparties.co/v1/plus-cohort-22",
+  headers: {
+    authorization: "0084e260-948c-41b3-ba88-e14a4fb1558a",
+    "Content-Type": "application/json",
+  },
+});
 
 const userInfo = new UserInfo(username, description, ava);
 
@@ -100,18 +104,46 @@ formAdd.addEventListener("submit", loadFormAdd);
 popupAvatarForm.addEventListener("submit", handleAvatarUpdate);
 
 Promise.all([api._getMyInformation(), api._getInitialCards()])
-    .then(([user, cards]) => {
-        userInfo.setUserInfo(user.name, user.about, user.avatar, user._id);
-        cards.forEach((card) => {
-          elementsGroup.append(loadInitials(card, userId))
-        });
-    })
-    .catch(printError);
+  .then(([user, cards]) => {
+    userInfo.setUserInfo(user.name, user.about, user.avatar, user._id);
+    cards.forEach((card) => {
+      elementsGroup.append(loadInitials(card, userId));
+    });
+  })
+  .catch(printError);
 
 enableValidation(settings);
 
-export { api, settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdit,
-popupEditSaveButton, popupAdd, popupAddSaveButton, popupEditClose,
-popupAddClose, nameProfile, jobProfile, nameEdit, descriptionEdit, formEdit,
-elementsGroup, popupAddLinkName, popupAddUrl, formAdd, popupPhoto,
-popupPhotoUrl, popupPhotoText, popupAvatar, popupPhotoCloseButton, avatarInput, popupAvatarSaveButton, userId, avatar, userInfo }
+export {
+  api,
+  settings,
+  popupsAll,
+  templateCard,
+  buttonEdit,
+  buttonAdd,
+  popupEdit,
+  popupEditSaveButton,
+  popupAdd,
+  popupAddSaveButton,
+  popupEditClose,
+  popupAddClose,
+  nameProfile,
+  jobProfile,
+  nameEdit,
+  descriptionEdit,
+  formEdit,
+  elementsGroup,
+  popupAddLinkName,
+  popupAddUrl,
+  formAdd,
+  popupPhoto,
+  popupPhotoUrl,
+  popupPhotoText,
+  popupAvatar,
+  popupPhotoCloseButton,
+  avatarInput,
+  popupAvatarSaveButton,
+  userId,
+  avatar,
+  userInfo,
+};
