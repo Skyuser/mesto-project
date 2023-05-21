@@ -21,7 +21,7 @@ export default class PopupWithForm extends Popup {
       settings.submitButtonSelector
     );
     
-    // находим текст кнопки submit
+    // находим изначальный текст кнопки submit
     this._submitButtonDefaultText = this._submitButton.textContent;
   }
 
