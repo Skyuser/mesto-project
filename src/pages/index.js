@@ -151,7 +151,7 @@ export {
 const infoUser = new UserInfo("#name", "#description", "#profile__avatar");
 
 // Экземпляр PopupWithForm для редактирования профиля
-const popupProfileEdit = new PopupWithForm("#popup_avatar", (inputs) => {
+const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
   Api.updateMyInformation(inputs).then((result) => {
     infoUser.setUserInfo(result);
     popupProfileEdit.close();
@@ -159,19 +159,28 @@ const popupProfileEdit = new PopupWithForm("#popup_avatar", (inputs) => {
 });
 
 // Экземпляр PopupWithForm для добавления карточки - код изменится в зависимости от Section
-// const popupFormAddCard = new PopupWithForm(".popup_type_add", (inputs) => {
-//     Api.postNewCard(inputs).then((result) => {
-//     infoUser.setUserInfo(result);
-//     section.addItem(result, result.owner._id);
-//       popupFormAddCard.close();
-//   });
-// });
-
-// Экземпляр PopupWithForm для обновления аватара
-const popupAvatarEdit = new PopupWithForm(".popup_type_add", (inputs) => {
+const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
     Api.postNewCard(inputs).then((result) => {
     infoUser.setUserInfo(result);
     section.addItem(result, result.owner._id);
       popupFormAddCard.close();
   });
+});
+
+// Экземпляр PopupWithForm для обновления аватара
+const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
+     Api.updateMyInformation(inputs).then((result) => {
+    infoUser.setUserInfo(result);
+    popupAvatarEdit.close();
+  });
+});
+
+// Экземпляр PopupWithForm для "Вы уверены?"
+const popupConfirmation = new PopupWithForm(".popup__remove-card", () => {
+  renderRemoving(true, buttonConfidence);
+  api
+    .deleteCard(cardId).then(() => {
+      deleteCard.remove();
+      popupConfirmation.close();
+    })
 });
