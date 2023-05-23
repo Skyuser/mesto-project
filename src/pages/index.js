@@ -8,6 +8,8 @@ import { printError } from '../components/utils.js'
 import Api from '../components/api.js'
 import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import PopupWithImage from '../components/PopupWithImage.js'
 
 // Объявления
 let userId;
@@ -46,6 +48,7 @@ const username = ('.profile__name');
 const description = ('.profile__job');
 const ava = ('.profile__avatar');
 const elementsGroup = ('.elements__group');
+const popupImg = ('#popup-photo');
 let sectionAdd;
 
 const settings = {
@@ -109,7 +112,7 @@ Promise.all([api._getMyInformation(), api._getInitialCards()])
 function createItem(data) {
   const cardAdd = new Card(data, userInfo._userId, templateCard, {
     handleClick: () => {
-      imageClass.openPopup(data); /* новый класс открытия картинки*/
+      popupOpenImage.open(data); 
     },
     handleLike: (cardId) => {
       if (!cardAdd._checkActiveClass()) {
@@ -133,6 +136,10 @@ function createItem(data) {
 }
 
 const infoUser = new UserInfo("#name", "#description", "#profile__avatar");
+
+// Создание экземпляра PopupWithImage для открытия изображения
+const popupOpenImage = new PopupWithImage(popupImg)
+popupOpenImage.setEventListeners();
 
 // Экземпляр PopupWithForm для редактирования профиля
 const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
