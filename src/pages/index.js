@@ -8,6 +8,8 @@ import { printError } from '../components/utils.js'
 import Api from '../components/api.js'
 import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
+import PopupWithForm from '../components/PopupWithForm';
+import PopupWithImage from '../components/PopupWithImage';
 
 // Объявления
 let userId;
@@ -65,29 +67,34 @@ const api = new Api({
   },
 });
 
+const popupCard = new PopupWithImage('#popup-photo', './image/karachaevsk.jpg', 'test');
+// popupCard.setEventListeners();
+
 const userInfo = new UserInfo(username, description, ava);
 
 // Общее закрытие попапов по оверлею или по крестику/Escape
-popupsAll.forEach((popup) => {
-  popup.addEventListener("mousedown", (evt) => {
-    if (evt.target.classList.contains("popup__close")) {
-      closePopup(popup);
-    }
-    if (evt.target === popup) {
-      closePopup(evt.target);
-    }
-  });
-});
+// popupsAll.forEach((popup) => {
+//   popup.addEventListener("mousedown", (evt) => {
+//     if (evt.target.classList.contains("popup__close")) {
+//       closePopup(popup);
+//     }
+//     if (evt.target === popup) {
+//       closePopup(evt.target);
+//     }
+//   });
+// });
 
-buttonAdd.addEventListener("click", function () {
-  openPopup(popupAdd);
-});
+// buttonAdd.addEventListener("click", function () {
+//   openPopup(popupAdd);
+// });
 
 // Сбор параметров профиля со страницы
 buttonEdit.addEventListener("click", function () {
-  nameEdit.value = nameProfile.textContent;
-  descriptionEdit.value = jobProfile.textContent;
-  openPopup(popupEdit);
+  // nameEdit.value = nameProfile.textContent;
+  // descriptionEdit.value = jobProfile.textContent;
+  // openPopup(popupEdit);
+  popupProfileEdit.open();
+  popupProfileEdit.setEventListeners();
 });
 
 Promise.all([api._getMyInformation(), api._getInitialCards()])
@@ -109,7 +116,8 @@ Promise.all([api._getMyInformation(), api._getInitialCards()])
 function createItem(data) {
   const cardAdd = new Card(data, userInfo._userId, templateCard, {
     handleClick: () => {
-      imageClass.openPopup(data); /* новый класс открытия картинки*/
+      popupCard.open(data['link'], data['name']);
+      // PopupWithImage.open(data); /* новый класс открытия картинки*/
     },
     handleLike: (cardId) => {
       if (!cardAdd._checkActiveClass()) {
