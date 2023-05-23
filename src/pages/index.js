@@ -1,16 +1,18 @@
 import '../pages/index.css';
 
 import { enableValidation } from '../components/validate.js';
-import { loadInitials } from '../components/card.js';
+import Card from '../components/card.js';
 import { openPopup, closePopup } from '../components/modal.js'
-import { submitFormEdit, loadFormAdd, handleAvatarUpdate, printError } from '../components/utils.js'
+import { printError } from '../components/utils.js'
+
 import Api from '../components/api.js'
-import UserInfo from '../components/UserInfo';
+import UserInfo from '../components/UserInfo.js';
+import Section from '../components/Section.js';
 
 // Объявления
 let userId;
 const popupsAll = document.querySelectorAll('.popup');
-const templateCard = document.querySelector('#card').content;
+const templateCard = ('#card');
 const buttonEdit = document.querySelector('.profile__edit-button');
 const buttonAdd = document.querySelector('.profile__add-button');
 const popupEdit = document.querySelector('#popup_edit');
@@ -31,8 +33,6 @@ const popupAvatarForm = popupAvatar.querySelector('#popup-avatarform');
 const avatarInput = popupAvatar.querySelector('.popup__input');
 // Замена параметров страницы профиля из формы редактирования
 const formEdit = popupEdit.querySelector('#popup-editform');
-// Загрузка базовых карточек
-const elementsGroup = document.querySelector('.elements__group');
 // Добавление карточек
 const popupAddLinkName = popupAdd.querySelector('#linkname');
 const popupAddUrl = popupAdd.querySelector('#url-img');
@@ -45,6 +45,8 @@ const popupPhotoCloseButton = popupPhoto.querySelector('.popup__close');
 const username = ('.profile__name');
 const description = ('.profile__job');
 const ava = ('.profile__avatar');
+const elementsGroup = ('.elements__group');
+let sectionAdd;
 
 const settings = {
     formSelector: '.popup__input-form',
@@ -90,30 +92,57 @@ buttonEdit.addEventListener('click', function() {
     openPopup(popupEdit);
 })
 
-formEdit.addEventListener('submit', submitFormEdit);
+
 avatarBase.addEventListener('click', function() {
     openPopup(popupAvatar);
 })
 
-//Сохранение карточек
-formAdd.addEventListener('submit', loadFormAdd);
-
-popupAvatarForm.addEventListener('submit', handleAvatarUpdate)
-
 Promise.all([api._getMyInformation(), api._getInitialCards()])
     .then(([user, cards]) => {
         userInfo.setUserInfo(user.name, user.about, user.avatar, user._id);
-        cards.forEach((card) => {
-          elementsGroup.append(loadInitials(card, userId))
-        });
+        sectionAdd = new Section({
+            items: cards,
+            renderer: (data) => {
+              const newCardAdd = createItem(data);
+              sectionAdd.addItem(newCardAdd);
+            }
+          },
+          elementsGroup
+        )
+        sectionAdd.renderItems(cards.reverse())
     })
     .catch(printError);
+   
+function createItem(data) {
+  const cardAdd = new Card(data, userInfo._userId, templateCard, {
+    handleClick: () => {
+      imageClass.openPopup(data); /* новый класс открытия картинки*/
+    },
+    handleLike: (cardId) => {
+      if (!cardAdd._checkActiveClass()) {
+        api.putLikeCard(cardId)
+          .then((data) => cardAdd._handleAddLike(data))
+          .catch(printError)
+      } else {
+        api.deleteLikeCard(cardId)
+          .then((data) => cardAdd._handleRemoveLike(data))
+          .catch(printError)
+      }
+    },
+    handleDelete: (cardId) => {
+      api.deleteCard(cardId)
+        .then(() => cardAdd._deleteCard())
+        .catch(printError)
+    },
+  });
+  const cardItem = cardAdd.generate();
+  return cardItem;
+}
 
 
 enableValidation(settings);
 
 export { api, settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdit,
 popupEditSaveButton, popupAdd, popupAddSaveButton, popupEditClose,
-popupAddClose, nameProfile, jobProfile, nameEdit, descriptionEdit, formEdit,
-elementsGroup, popupAddLinkName, popupAddUrl, formAdd, popupPhoto,
+popupAddClose, nameProfile, jobProfile, nameEdit, descriptionEdit, formEdit, popupAddLinkName, popupAddUrl, formAdd, popupPhoto,
 popupPhotoUrl, popupPhotoText, popupAvatar, popupPhotoCloseButton, avatarInput, popupAvatarSaveButton, userId, avatar, userInfo }
