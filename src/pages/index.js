@@ -90,8 +90,8 @@ const userInfo = new UserInfo(username, description, ava);
 
 // Сбор параметров профиля со страницы
 buttonEdit.addEventListener("click", function () {
-  // nameEdit.value = nameProfile.textContent;
-  // descriptionEdit.value = jobProfile.textContent;
+  nameEdit.value = nameProfile.textContent;
+  descriptionEdit.value = jobProfile.textContent;
   // openPopup(popupEdit);
   popupProfileEdit.open();
   popupProfileEdit.setEventListeners();
@@ -144,7 +144,7 @@ const infoUser = new UserInfo("#name", "#description", "#profile__avatar");
 
 // Экземпляр PopupWithForm для редактирования профиля
 const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
-  Api.updateMyInformation(inputs).then((result) => {
+  api.updateMyInformation(inputs).then((result) => {
     infoUser.setUserInfo(result);
     popupProfileEdit.close();
   });
@@ -152,7 +152,7 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
 
 // Экземпляр PopupWithForm для добавления карточки - код изменится в зависимости от Section
 const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
-    Api.postNewCard(inputs).then((result) => {
+    api.postNewCard(inputs).then((result) => {
     infoUser.setUserInfo(result);
     section.addItem(result, result.owner._id);
       popupFormAddCard.close();
@@ -161,7 +161,7 @@ const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
 
 // Экземпляр PopupWithForm для обновления аватара
 const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
-     Api.updateMyInformation(inputs).then((result) => {
+     api.updateMyInformation(inputs).then((result) => {
     infoUser.setUserInfo(result);
     popupAvatarEdit.close();
   });
