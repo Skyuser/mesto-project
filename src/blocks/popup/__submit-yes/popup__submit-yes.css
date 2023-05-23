@@ -1,0 +1,7 @@
+/* Уменьшение расстояния для "Вы уверены?" */
+@media all {
+  .popup__submit-yes {
+    margin-top: 14px; 
+    margin-bottom: 36px;
+  }
+}

@@ -34,9 +34,9 @@ const avatarInput = popupAvatar.querySelector('.popup__input');
 // Замена параметров страницы профиля из формы редактирования
 const formEdit = popupEdit.querySelector('#popup-editform');
 // Добавление карточек
-const popupAddLinkName = popupAdd.querySelector('#linkname');
-const popupAddUrl = popupAdd.querySelector('#url-img');
-const formAdd = popupAdd.querySelector('#popup-addform');
+const popupAddLinkName = popupAdd.querySelector("#linkname");
+const popupAddUrl = popupAdd.querySelector("#url-img");
+const formAdd = popupAdd.querySelector("#popup-addform");
 //Превью изображения
 const popupPhoto = document.querySelector('#popup-photo');
 const popupPhotoUrl = popupPhoto.querySelector('.popup__image');
@@ -49,53 +49,46 @@ const elementsGroup = ('.elements__group');
 let sectionAdd;
 
 const settings = {
-    formSelector: '.popup__input-form',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__submit',
-    inactiveButtonClass: 'popup__submit_disabled',
-    inputErrorClass: 'popup__input_invalid',
-    errorClass: 'popup__input-error_active'
-}
+  formSelector: ".popup__input-form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__submit",
+  inactiveButtonClass: "popup__submit_disabled",
+  inputErrorClass: "popup__input_invalid",
+  errorClass: "popup__input-error_active",
+};
 
 const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-22',
-    headers: {
-      authorization: '0084e260-948c-41b3-ba88-e14a4fb1558a',
-      'Content-Type': 'application/json'
-    }
-  });
-
+  baseUrl: "https://mesto.nomoreparties.co/v1/plus-cohort-22",
+  headers: {
+    authorization: "0084e260-948c-41b3-ba88-e14a4fb1558a",
+    "Content-Type": "application/json",
+  },
+});
 
 const userInfo = new UserInfo(username, description, ava);
 
 // Общее закрытие попапов по оверлею или по крестику/Escape
 popupsAll.forEach((popup) => {
-    popup.addEventListener('mousedown', (evt) => {
-        if (evt.target.classList.contains('popup__close')) {
-            closePopup(popup)
-        }
-        if (evt.target === popup) {
-            closePopup(evt.target);
-          }
-    })
-}) 
+  popup.addEventListener("mousedown", (evt) => {
+    if (evt.target.classList.contains("popup__close")) {
+      closePopup(popup);
+    }
+    if (evt.target === popup) {
+      closePopup(evt.target);
+    }
+  });
+});
 
-buttonAdd.addEventListener('click', function() {
-    openPopup(popupAdd);
-})
-
+buttonAdd.addEventListener("click", function () {
+  openPopup(popupAdd);
+});
 
 // Сбор параметров профиля со страницы
-buttonEdit.addEventListener('click', function() {
-    nameEdit.value = nameProfile.textContent;
-    descriptionEdit.value = jobProfile.textContent;
-    openPopup(popupEdit);
-})
-
-
-avatarBase.addEventListener('click', function() {
-    openPopup(popupAvatar);
-})
+buttonEdit.addEventListener("click", function () {
+  nameEdit.value = nameProfile.textContent;
+  descriptionEdit.value = jobProfile.textContent;
+  openPopup(popupEdit);
+});
 
 Promise.all([api._getMyInformation(), api._getInitialCards()])
     .then(([user, cards]) => {
@@ -139,6 +132,42 @@ function createItem(data) {
   return cardItem;
 }
 
+const infoUser = new UserInfo("#name", "#description", "#profile__avatar");
+
+// Экземпляр PopupWithForm для редактирования профиля
+const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
+  Api.updateMyInformation(inputs).then((result) => {
+    infoUser.setUserInfo(result);
+    popupProfileEdit.close();
+  });
+});
+
+// Экземпляр PopupWithForm для добавления карточки - код изменится в зависимости от Section
+const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
+    Api.postNewCard(inputs).then((result) => {
+    infoUser.setUserInfo(result);
+    section.addItem(result, result.owner._id);
+      popupFormAddCard.close();
+  });
+});
+
+// Экземпляр PopupWithForm для обновления аватара
+const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
+     Api.updateMyInformation(inputs).then((result) => {
+    infoUser.setUserInfo(result);
+    popupAvatarEdit.close();
+  });
+});
+
+// Экземпляр PopupWithForm для "Вы уверены?"
+const popupConfirmation = new PopupWithForm(".popup__remove-card", () => {
+  renderRemoving(true, buttonConfidence);
+  api
+    .deleteCard(cardId).then(() => {
+      deleteCard.remove();
+      popupConfirmation.close();
+    })
+});
 
 enableValidation(settings);
 
