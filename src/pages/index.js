@@ -159,6 +159,16 @@ const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
   });
 });
 
+// Экземпляр PopupWithForm для "Вы уверены?"
+const popupConfirmation = new PopupWithForm(".popup__remove-card", () => {
+  renderRemoving(true, buttonConfidence);
+  api
+    .deleteCard(cardId).then(() => {
+      deleteCard.remove();
+      popupConfirmation.close();
+    })
+});
+
 enableValidation(settings);
 
 export { api, settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdit,
