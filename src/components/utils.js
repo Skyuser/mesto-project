@@ -1,80 +1,17 @@
-import { settings, nameProfile, nameEdit, jobProfile, descriptionEdit, popupEdit, popupAdd, popupAvatar, elementsGroup, popupAddUrl, popupAddLinkName, popupAddSaveButton, avatarInput, popupAvatarSaveButton, userId, avatar, userInfo } from '../pages/index.js';
-import { closePopup, renderLoading } from '../components/modal.js'
-import { api } from '../pages/index.js';
-import { loadInitials } from './card.js';
-
-function handleSubmit(request, evt) {
-    evt.preventDefault();
-    const submitButton = evt.submitter;
-    const buttonText = submitButton.textContent;
-    const loadingText = "Сохранение..."
-    renderLoading(submitButton, true, buttonText, loadingText);
-    request()
-      .then(() => {
-        evt.target.reset();
-      })
-      .catch(printError)
-      .finally(() => {
-        renderLoading(submitButton, false, buttonText, loadingText);
-      });
-  }
-
-function submitFormEdit(evt) {
-    function requestForm() {
-    const data = userInfo.getUserInfo()
-    return api.updateMyInformation(data) // Только начал редактировать. Пока не работает! 
-        .then((data) => {
-          userInfo.setUserInfo(data.name, data.about)
-          closePopup(popupEdit);
-        })
-    }
-    handleSubmit(requestForm, evt);
-}
-
-function handleAvatarUpdate(evt) {
-    function requestForm() {
-      return updateAvatar(avatarInput.value)
-        .then((res) => {
-          avatar.src = res.avatar;
-          evt.target.reset();
-          disableButton(settings, popupAvatarSaveButton);
-          closePopup(popupAvatar);
-        })
-    }
-    handleSubmit(requestForm, evt);
-  }
-
-function loadFormAdd (evt){
-    function requestForm() {
-    return postNewCard(popupAddLinkName.value, popupAddUrl.value)
-        .then((card) => {
-            elementsGroup.prepend(loadInitials(card, userId));
-            disableButton(settings, popupAddSaveButton);
-            closePopup(popupAdd); 
-        })
-    }
-    handleSubmit(requestForm, evt); 
-}
-
-function disableButton(settings, disabledSaveButton) {
-    disabledSaveButton.disabled = true;
-    disabledSaveButton.classList.add(settings.inactiveButtonClass);
-  }
-
-  function checkResponse(res) {   
+function checkResponse(res) {   
     if (res.ok) {
       return res.json();
     }
     return Promise.reject(`Ошибка: ${res.status}`);
   }
   
-  function checker(url, data) {
+function checker(url, data) {
     return fetch(url, data)
         .then(checkResponse)
   }
 
-  function printError(err) {
+function printError(err) {
     console.log(`Ошибка: ${err}`);
   }
 
-export { submitFormEdit, loadFormAdd, handleAvatarUpdate, checker, printError }
+export { checker, printError }
