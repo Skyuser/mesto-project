@@ -88,10 +88,12 @@ const userInfo = new UserInfo(username, description, ava);
 //   });
 // });
 
-// buttonAdd.addEventListener("click", function () {
-//   openPopup(popupAdd);
-// });
-avatarBase.addEventListener('click', function () {
+buttonAdd.addEventListener("click", function () {
+  popupFormAddCard.open();
+  popupFormAddCard.setEventListeners();
+});
+
+avatarBase.addEventListener("click", function () {
   popupAvatarEdit.open();
   popupAvatarEdit.setEventListeners();
 });
@@ -162,9 +164,9 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
 
 // Экземпляр PopupWithForm для добавления карточки - код изменится в зависимости от Section
 const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
+  console.log('inputs', inputs)
   api.postNewCard(inputs).then((result) => {
-    userInfo.setUserInfo(result);
-    section.addItem(result, result.owner._id);
+    sectionAdd.addItem(result, result.owner._id);
     popupFormAddCard.close();
   });
 });
