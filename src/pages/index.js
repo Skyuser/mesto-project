@@ -91,12 +91,16 @@ const userInfo = new UserInfo(username, description, ava);
 // buttonAdd.addEventListener("click", function () {
 //   openPopup(popupAdd);
 // });
+avatarBase.addEventListener('click', function () {
+  popupAvatarEdit.open();
+  popupAvatarEdit.setEventListeners();
+});
 
 // Сбор параметров профиля со страницы
 buttonEdit.addEventListener("click", function () {
   nameEdit.value = nameProfile.textContent;
   descriptionEdit.value = jobProfile.textContent;
-  // openPopup(popupEdit);
+
   popupProfileEdit.open();
   popupProfileEdit.setEventListeners();
 });
@@ -167,7 +171,7 @@ const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
 
 // Экземпляр PopupWithForm для обновления аватара
 const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
-  api.updateMyInformation(inputs).then((result) => {
+  api.updateAvatar(inputs).then((result) => {
     userInfo.setUserInfo(result.name, result.about, result.avatar, result._id);
     popupAvatarEdit.close();
   });
