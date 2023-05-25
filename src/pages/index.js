@@ -72,21 +72,8 @@ const popupCard = new PopupWithImage(
   "./image/karachaevsk.jpg",
   "test"
 );
-// popupCard.setEventListeners();
 
 const userInfo = new UserInfo(username, description, ava);
-
-// Общее закрытие попапов по оверлею или по крестику/Escape
-// popupsAll.forEach((popup) => {
-//   popup.addEventListener("mousedown", (evt) => {
-//     if (evt.target.classList.contains("popup__close")) {
-//       closePopup(popup);
-//     }
-//     if (evt.target === popup) {
-//       closePopup(evt.target);
-//     }
-//   });
-// });
 
 buttonAdd.addEventListener("click", function () {
   popupFormAddCard.open();
@@ -164,9 +151,8 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
 
 // Экземпляр PopupWithForm для добавления карточки - код изменится в зависимости от Section
 const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
-  console.log('inputs', inputs)
   api.postNewCard(inputs).then((result) => {
-    sectionAdd.addItem(result, result.owner._id);
+    sectionAdd.addItem(createItem(result));
     popupFormAddCard.close();
   });
 });
