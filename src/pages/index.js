@@ -149,7 +149,7 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
   });
 });
 
-// Экземпляр PopupWithForm для добавления карточки - код изменится в зависимости от Section
+// Экземпляр PopupWithForm для добавления карточки 
 const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
   api.postNewCard(inputs).then((result) => {
     sectionAdd.addItem(createItem(result));

@@ -40,6 +40,7 @@ export default class PopupWithForm extends Popup {
     super.setEventListeners();
     // Добавляем обработчик сабмита формы
     this._form.addEventListener("submit", (evt) => {
+      this._submitButton.textContent = "Сохранение...";
       evt.preventDefault();
       this._submitForm(this._getInputValues());
     });
@@ -49,6 +50,7 @@ export default class PopupWithForm extends Popup {
   close() {
     super.close();
     this._form.reset();
+    this._submitButton.textContent = this._submitButtonDefaultText;
   }
   // Для каждого попапа создавайте свой экземпляр класса PopupWithForm - TO DO
 }
