@@ -2,7 +2,6 @@ import "../pages/index.css";
 
 import { enableValidation } from "../components/validate.js";
 import Card from "../components/card.js";
-import { openPopup, closePopup } from "../components/modal.js";
 import { printError } from "../components/utils.js";
 
 import Api from "../components/api.js";
@@ -162,15 +161,6 @@ const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
   api.updateAvatar(inputs).then((result) => {
     userInfo.setUserInfo(result.name, result.about, result.avatar, result._id);
     popupAvatarEdit.close();
-  });
-});
-
-// Экземпляр PopupWithForm для "Вы уверены?"
-const popupConfirmation = new PopupWithForm(".popup__remove-card", () => {
-  renderRemoving(true, buttonConfidence);
-  api.deleteCard(cardId).then(() => {
-    deleteCard.remove();
-    popupConfirmation.close();
   });
 });
 
