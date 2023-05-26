@@ -4,11 +4,13 @@ import { enableValidation } from "../components/validate.js";
 import Card from "../components/card.js";
 import { printError } from "../components/utils.js";
 
-import Api from "../components/api.js";
-import UserInfo from "../components/UserInfo.js";
-import Section from "../components/Section.js";
-import PopupWithForm from "../components/PopupWithForm";
-import PopupWithImage from "../components/PopupWithImage";
+
+import Api from '../components/api.js'
+import UserInfo from '../components/UserInfo.js';
+import Section from '../components/Section.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import PopupWithImage from '../components/PopupWithImage.js'
+
 
 // Объявления
 let userId;
@@ -39,6 +41,7 @@ const popupAddLinkName = popupAdd.querySelector("#linkname");
 const popupAddUrl = popupAdd.querySelector("#url-img");
 const formAdd = popupAdd.querySelector("#popup-addform");
 //Превью изображения
+
 const popupPhoto = document.querySelector("#popup-photo");
 const popupPhotoUrl = popupPhoto.querySelector(".popup__image");
 const popupPhotoText = popupPhoto.querySelector(".popup__text");
@@ -47,6 +50,7 @@ const username = ".profile__name";
 const description = ".profile__job";
 const ava = ".profile__avatar";
 const elementsGroup = ".elements__group";
+
 let sectionAdd;
 
 const settings = {
@@ -113,7 +117,7 @@ Promise.all([api._getMyInformation(), api._getInitialCards()])
 function createItem(data) {
   const cardAdd = new Card(data, userInfo._userId, templateCard, {
     handleClick: () => {
-      popupCard.open(data["link"], data["name"]);
+        popupCard.open(data["link"], data["name"]);
       // PopupWithImage.open(data); /* новый класс открытия картинки*/
     },
     handleLike: (cardId) => {
