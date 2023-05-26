@@ -14,23 +14,23 @@ export default class Popup {
   }
 
   // Содержит приватный метод _handleEscClose, который содержит логику закрытия попапа клавишей Esc.
-  _handleEscClose() {
-    if (evt.key === "Escape") {
+  _handleEscClose = (event) => {
+    if (event.key === "Escape") {
       //   const openedPopup = document.querySelector(".popup_opened");
       this.close();
     }
   }
 
   setEventListeners() {
-    document.addEventListener("keydown", this._handleEscClose());
-    this._popup.addEventListener("mousedown", (evt) => {
-      if (evt.target.classList.contains("popup__close")) {
+    document.addEventListener("keydown", this._handleEscClose);
+    this._popup.addEventListener("mousedown", (event) => {
+      if (event.target.classList.contains("popup__close")) {
         this.close();
-        document.removeEventListener("keydown", this._handleEscClose());
+        document.removeEventListener("keydown", this._handleEscClose);
       }
-      if (evt.target === this._popup) {
+      if (event.target === this._popup) {
         this.close();
-        document.removeEventListener("keydown", this._handleEscClose());
+        document.removeEventListener("keydown", this._handleEscClose);
       }
     });
   }

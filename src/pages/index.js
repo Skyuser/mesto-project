@@ -1,9 +1,9 @@
-import '../pages/index.css';
+import "../pages/index.css";
 
-import { enableValidation } from '../components/validate.js';
-import Card from '../components/card.js';
-import { openPopup, closePopup } from '../components/modal.js'
-import { printError } from '../components/utils.js'
+import { enableValidation } from "../components/validate.js";
+import Card from "../components/card.js";
+import { printError } from "../components/utils.js";
+
 
 import Api from '../components/api.js'
 import UserInfo from '../components/UserInfo.js';
@@ -11,44 +11,46 @@ import Section from '../components/Section.js';
 import PopupWithForm from '../components/PopupWithForm.js';
 import PopupWithImage from '../components/PopupWithImage.js'
 
+
 // Объявления
 let userId;
-const popupsAll = document.querySelectorAll('.popup');
-const templateCard = ('#card');
-const buttonEdit = document.querySelector('.profile__edit-button');
-const buttonAdd = document.querySelector('.profile__add-button');
-const popupEdit = document.querySelector('#popup_edit');
-const popupEditSaveButton = popupEdit.querySelector('.popup__submit');
-const popupAdd = document.querySelector('#popup_add');
-const popupAddSaveButton = popupAdd.querySelector('.popup__submit');
-const popupEditClose = popupEdit.querySelector('.popup__close');
-const popupAddClose = popupAdd.querySelector('.popup__close');
-const nameProfile = document.querySelector('.profile__name');
-const jobProfile = document.querySelector('.profile__job');
-const nameEdit = popupEdit.querySelector('#name');
-const descriptionEdit = popupEdit.querySelector('#description');
-const avatar = document.querySelector('.profile__avatar');
-const avatarBase = document.querySelector('.profile__avatar-base');
-const popupAvatar = document.querySelector('#popup_avatar');
-const popupAvatarSaveButton = popupAvatar.querySelector('.popup__submit');
-const popupAvatarForm = popupAvatar.querySelector('#popup-avatarform');
-const avatarInput = popupAvatar.querySelector('.popup__input');
+const popupsAll = document.querySelectorAll(".popup");
+const templateCard = "#card";
+const buttonEdit = document.querySelector(".profile__edit-button");
+const buttonAdd = document.querySelector(".profile__add-button");
+const popupEdit = document.querySelector("#popup_edit");
+const popupEditSaveButton = popupEdit.querySelector(".popup__submit");
+const popupAdd = document.querySelector("#popup_add");
+const popupAddSaveButton = popupAdd.querySelector(".popup__submit");
+const popupEditClose = popupEdit.querySelector(".popup__close");
+const popupAddClose = popupAdd.querySelector(".popup__close");
+const nameProfile = document.querySelector(".profile__name");
+const jobProfile = document.querySelector(".profile__job");
+const nameEdit = popupEdit.querySelector("#name");
+const descriptionEdit = popupEdit.querySelector("#description");
+const avatar = document.querySelector(".profile__avatar");
+const avatarBase = document.querySelector(".profile__avatar-base");
+const popupAvatar = document.querySelector("#popup_avatar");
+const popupAvatarSaveButton = popupAvatar.querySelector(".popup__submit");
+const popupAvatarForm = popupAvatar.querySelector("#popup-avatarform");
+const avatarInput = popupAvatar.querySelector(".popup__input");
 // Замена параметров страницы профиля из формы редактирования
-const formEdit = popupEdit.querySelector('#popup-editform');
+const formEdit = popupEdit.querySelector("#popup-editform");
 // Добавление карточек
 const popupAddLinkName = popupAdd.querySelector("#linkname");
 const popupAddUrl = popupAdd.querySelector("#url-img");
 const formAdd = popupAdd.querySelector("#popup-addform");
 //Превью изображения
-const popupPhoto = document.querySelector('#popup-photo');
-const popupPhotoUrl = popupPhoto.querySelector('.popup__image');
-const popupPhotoText = popupPhoto.querySelector('.popup__text');
-const popupPhotoCloseButton = popupPhoto.querySelector('.popup__close');
-const username = ('.profile__name');
-const description = ('.profile__job');
-const ava = ('.profile__avatar');
-const elementsGroup = ('.elements__group');
-const popupImg = ('#popup-photo');
+
+const popupPhoto = document.querySelector("#popup-photo");
+const popupPhotoUrl = popupPhoto.querySelector(".popup__image");
+const popupPhotoText = popupPhoto.querySelector(".popup__text");
+const popupPhotoCloseButton = popupPhoto.querySelector(".popup__close");
+const username = ".profile__name";
+const description = ".profile__job";
+const ava = ".profile__avatar";
+const elementsGroup = ".elements__group";
+
 let sectionAdd;
 
 const settings = {
@@ -68,117 +70,135 @@ const api = new Api({
   },
 });
 
+const popupCard = new PopupWithImage(
+  "#popup-photo",
+  "./image/karachaevsk.jpg",
+  "test"
+);
+
 const userInfo = new UserInfo(username, description, ava);
 
-// Общее закрытие попапов по оверлею или по крестику/Escape
-popupsAll.forEach((popup) => {
-  popup.addEventListener("mousedown", (evt) => {
-    if (evt.target.classList.contains("popup__close")) {
-      closePopup(popup);
-    }
-    if (evt.target === popup) {
-      closePopup(evt.target);
-    }
-  });
+buttonAdd.addEventListener("click", function () {
+  popupFormAddCard.open();
+  popupFormAddCard.setEventListeners();
 });
 
-buttonAdd.addEventListener("click", function () {
-  openPopup(popupAdd);
+avatarBase.addEventListener("click", function () {
+  popupAvatarEdit.open();
+  popupAvatarEdit.setEventListeners();
 });
 
 // Сбор параметров профиля со страницы
 buttonEdit.addEventListener("click", function () {
   nameEdit.value = nameProfile.textContent;
   descriptionEdit.value = jobProfile.textContent;
-  openPopup(popupEdit);
+
+  popupProfileEdit.open();
+  popupProfileEdit.setEventListeners();
 });
 
 Promise.all([api._getMyInformation(), api._getInitialCards()])
-    .then(([user, cards]) => {
-        userInfo.setUserInfo(user.name, user.about, user.avatar, user._id);
-        sectionAdd = new Section({
-            items: cards,
-            renderer: (data) => {
-              const newCardAdd = createItem(data);
-              sectionAdd.addItem(newCardAdd);
-            }
-          },
-          elementsGroup
-        )
-        sectionAdd.renderItems(cards.reverse())
-    })
-    .catch(printError);
-   
+  .then(([user, cards]) => {
+    userInfo.setUserInfo(user.name, user.about, user.avatar, user._id);
+    sectionAdd = new Section(
+      {
+        items: cards,
+        renderer: (data) => {
+          const newCardAdd = createItem(data);
+          sectionAdd.addItem(newCardAdd);
+        },
+      },
+      elementsGroup
+    );
+    sectionAdd.renderItems(cards.reverse());
+  })
+  .catch(printError);
+
 function createItem(data) {
   const cardAdd = new Card(data, userInfo._userId, templateCard, {
     handleClick: () => {
-      popupOpenImage.open(data); 
+        popupCard.open(data["link"], data["name"]);
+      // PopupWithImage.open(data); /* новый класс открытия картинки*/
     },
     handleLike: (cardId) => {
       if (!cardAdd._checkActiveClass()) {
-        api.putLikeCard(cardId)
+        api
+          .putLikeCard(cardId)
           .then((data) => cardAdd._handleAddLike(data))
-          .catch(printError)
+          .catch(printError);
       } else {
-        api.deleteLikeCard(cardId)
+        api
+          .deleteLikeCard(cardId)
           .then((data) => cardAdd._handleRemoveLike(data))
-          .catch(printError)
+          .catch(printError);
       }
     },
     handleDelete: (cardId) => {
-      api.deleteCard(cardId)
+      api
+        .deleteCard(cardId)
         .then(() => cardAdd._deleteCard())
-        .catch(printError)
+        .catch(printError);
     },
   });
   const cardItem = cardAdd.generate();
   return cardItem;
 }
 
-const infoUser = new UserInfo("#name", "#description", "#profile__avatar");
-
-// Создание экземпляра PopupWithImage для открытия изображения
-const popupOpenImage = new PopupWithImage(popupImg)
-popupOpenImage.setEventListeners();
-
 // Экземпляр PopupWithForm для редактирования профиля
 const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
-  Api.updateMyInformation(inputs).then((result) => {
-    infoUser.setUserInfo(result);
+  api.updateMyInformation(inputs).then((result) => {
+    userInfo.setUserInfo(result.name, result.about, result.avatar, result._id);
     popupProfileEdit.close();
   });
 });
 
-// Экземпляр PopupWithForm для добавления карточки - код изменится в зависимости от Section
+// Экземпляр PopupWithForm для добавления карточки 
 const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
-    Api.postNewCard(inputs).then((result) => {
-    infoUser.setUserInfo(result);
-    section.addItem(result, result.owner._id);
-      popupFormAddCard.close();
+  api.postNewCard(inputs).then((result) => {
+    sectionAdd.addItem(createItem(result));
+    popupFormAddCard.close();
   });
 });
 
 // Экземпляр PopupWithForm для обновления аватара
 const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
-     Api.updateMyInformation(inputs).then((result) => {
-    infoUser.setUserInfo(result);
+  api.updateAvatar(inputs).then((result) => {
+    userInfo.setUserInfo(result.name, result.about, result.avatar, result._id);
     popupAvatarEdit.close();
   });
 });
 
-// Экземпляр PopupWithForm для "Вы уверены?"
-const popupConfirmation = new PopupWithForm(".popup__remove-card", () => {
-  renderRemoving(true, buttonConfidence);
-  api
-    .deleteCard(cardId).then(() => {
-      deleteCard.remove();
-      popupConfirmation.close();
-    })
-});
-
 enableValidation(settings);
 
-export { api, settings, popupsAll, templateCard, buttonEdit, buttonAdd, popupEdit,
-popupEditSaveButton, popupAdd, popupAddSaveButton, popupEditClose,
-popupAddClose, nameProfile, jobProfile, nameEdit, descriptionEdit, formEdit, popupAddLinkName, popupAddUrl, formAdd, popupPhoto,
-popupPhotoUrl, popupPhotoText, popupAvatar, popupPhotoCloseButton, avatarInput, popupAvatarSaveButton, userId, avatar, userInfo }
+export {
+  api,
+  settings,
+  popupsAll,
+  templateCard,
+  buttonEdit,
+  buttonAdd,
+  popupEdit,
+  popupEditSaveButton,
+  popupAdd,
+  popupAddSaveButton,
+  popupEditClose,
+  popupAddClose,
+  nameProfile,
+  jobProfile,
+  nameEdit,
+  descriptionEdit,
+  formEdit,
+  popupAddLinkName,
+  popupAddUrl,
+  formAdd,
+  popupPhoto,
+  popupPhotoUrl,
+  popupPhotoText,
+  popupAvatar,
+  popupPhotoCloseButton,
+  avatarInput,
+  popupAvatarSaveButton,
+  userId,
+  avatar,
+  userInfo,
+};
