@@ -69,4 +69,3 @@ enableValidation() {
       this._toggleButtonState();
     };
   };
-
