@@ -1,15 +1,15 @@
 import "../pages/index.css";
 
-import { enableValidation } from "../components/validate.js";
-import Card from "../components/card.js";
+import Card from "../components/Card.js";
 import { printError } from "../components/utils.js";
 
 
-import Api from '../components/api.js'
+import Api from '../components/Api.js'
 import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
 import PopupWithForm from '../components/PopupWithForm.js';
-import PopupWithImage from '../components/PopupWithImage.js'
+import PopupWithImage from '../components/PopupWithImage.js';
+import FormValidator from "../components/FormValidator.js";
 
 
 // Объявления
@@ -79,6 +79,7 @@ const popupCard = new PopupWithImage(
 const userInfo = new UserInfo(username, description, ava);
 
 buttonAdd.addEventListener("click", function () {
+  cardValidator.disableButton();
   popupFormAddCard.open();
   popupFormAddCard.setEventListeners();
 });
@@ -168,37 +169,12 @@ const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
   });
 });
 
-enableValidation(settings);
+const avatarValidator = new FormValidator(settings, popupAvatarForm);
+const addValidator = new FormValidator(settings, formEdit);
+const cardValidator = new FormValidator(settings, formAdd);
 
-export {
-  api,
-  settings,
-  popupsAll,
-  templateCard,
-  buttonEdit,
-  buttonAdd,
-  popupEdit,
-  popupEditSaveButton,
-  popupAdd,
-  popupAddSaveButton,
-  popupEditClose,
-  popupAddClose,
-  nameProfile,
-  jobProfile,
-  nameEdit,
-  descriptionEdit,
-  formEdit,
-  popupAddLinkName,
-  popupAddUrl,
-  formAdd,
-  popupPhoto,
-  popupPhotoUrl,
-  popupPhotoText,
-  popupAvatar,
-  popupPhotoCloseButton,
-  avatarInput,
-  popupAvatarSaveButton,
-  userId,
-  avatar,
-  userInfo,
-};
+avatarValidator.enableValidation(settings);
+addValidator.enableValidation(settings);
+cardValidator.enableValidation(settings);
+
+export { settings }

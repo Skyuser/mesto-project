@@ -1,5 +1,5 @@
-import Popup from "./Popup";
-import { settings } from "../pages";
+import Popup from "./Popup.js";
+import { settings } from "../pages/index.js";
 
 // Создайте класс PopupWithForm, который наследуется от Popup
 export default class PopupWithForm extends Popup {
