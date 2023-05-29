@@ -51,7 +51,7 @@ export default class PopupWithForm extends Popup {
   close() {
     super.close();
     this._form.reset();
-    // this._submitButton.textContent = this._submitButtonDefaultText;
+   
     this._form.removeEventListener("submit", this._submit);
   }
   // Для каждого попапа создавайте свой экземпляр класса PopupWithForm - TO DO

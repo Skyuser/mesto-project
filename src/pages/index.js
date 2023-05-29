@@ -157,7 +157,6 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
       popupProfileEdit.close();
     })
     .finally(function () {
-      // В любом случае
       popupProfileEdit.submitButton.textContent =
         popupProfileEdit.submitButtonDefaultText;
     });
@@ -172,7 +171,6 @@ const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
       popupFormAddCard.close();
     })
     .finally(function () {
-      // В любом случае
       popupFormAddCard.submitButton.textContent =
         popupFormAddCard.submitButtonDefaultText;
     });
@@ -192,7 +190,6 @@ const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
       popupAvatarEdit.close();
     })
     .finally(function () {
-      // В любом случае
       popupAvatarEdit.submitButton.textContent =
         popupAvatarEdit.submitButtonDefaultText;
     });
