@@ -17,12 +17,12 @@ export default class PopupWithForm extends Popup {
     this._inputList = this._form.querySelectorAll(settings.inputSelector);
 
     // находим кнопку submit
-    this._submitButton = this._form.querySelector(
+    this.submitButton = this._form.querySelector(
       settings.submitButtonSelector
     );
 
     // находим изначальный текст кнопки submit
-    this._submitButtonDefaultText = this._submitButton.textContent;
+    this.submitButtonDefaultText = this.submitButton.textContent;
   }
 
   // Содержит приватный метод _getInputValues, который собирает данные всех полей формы.
@@ -35,7 +35,7 @@ export default class PopupWithForm extends Popup {
   }
 
   _submit = (evt) => {
-    this._submitButton.textContent = "Сохранение...";
+    this.submitButton.textContent = "Сохранение...";
     evt.preventDefault();
     this._submitForm(this._getInputValues());
   };
@@ -51,7 +51,7 @@ export default class PopupWithForm extends Popup {
   close() {
     super.close();
     this._form.reset();
-    this._submitButton.textContent = this._submitButtonDefaultText;
+    // this._submitButton.textContent = this._submitButtonDefaultText;
     this._form.removeEventListener("submit", this._submit);
   }
   // Для каждого попапа создавайте свой экземпляр класса PopupWithForm - TO DO
