@@ -89,9 +89,9 @@ avatarBase.addEventListener("click", function () {
 
 // Сбор параметров профиля со страницы
 buttonEdit.addEventListener("click", function () {
-  nameEdit.value = nameProfile.textContent;
-  descriptionEdit.value = jobProfile.textContent;
-
+  const infoObject = userInfo.getUserInfo();
+  nameEdit.value = infoObject.name;
+  descriptionEdit.value = infoObject.about;
   popupProfileEdit.open();
   popupProfileEdit.setEventListeners();
 });
@@ -156,6 +156,7 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
       );
       popupProfileEdit.close();
     })
+    .catch(printError)
     .finally(function () {
       popupProfileEdit.submitButton.textContent =
         popupProfileEdit.submitButtonDefaultText;
@@ -170,6 +171,7 @@ const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
       sectionAdd.addItem(createItem(result));
       popupFormAddCard.close();
     })
+    .catch(printError)
     .finally(function () {
       popupFormAddCard.submitButton.textContent =
         popupFormAddCard.submitButtonDefaultText;
@@ -189,6 +191,7 @@ const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
       );
       popupAvatarEdit.close();
     })
+    .catch(printError)
     .finally(function () {
       popupAvatarEdit.submitButton.textContent =
         popupAvatarEdit.submitButtonDefaultText;
