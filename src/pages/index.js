@@ -91,9 +91,9 @@ avatarBase.addEventListener("click", function () {
 
 // Сбор параметров профиля со страницы
 buttonEdit.addEventListener("click", function () {
-  nameEdit.value = nameProfile.textContent;
-  descriptionEdit.value = jobProfile.textContent;
-
+  const infoObject = userInfo.getUserInfo();
+  nameEdit.value = infoObject.name;
+  descriptionEdit.value = infoObject.about;
   popupProfileEdit.open();
   popupProfileEdit.setEventListeners();
 });
@@ -150,7 +150,8 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
   api.updateMyInformation(inputs).then((result) => {
     userInfo.setUserInfo(result.name, result.about, result.avatar, result._id);
     popupProfileEdit.close();
-  });
+  })
+  .catch(printError);
 });
 
 // Экземпляр PopupWithForm для добавления карточки 
@@ -158,15 +159,18 @@ const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
   api.postNewCard(inputs).then((result) => {
     sectionAdd.addItem(createItem(result));
     popupFormAddCard.close();
-  });
+  })
+  .catch(printError);
 });
 
 // Экземпляр PopupWithForm для обновления аватара
 const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
-  api.updateAvatar(inputs).then((result) => {
+  api.updateAvatar(inputs)
+  .then((result) => {
     userInfo.setUserInfo(result.name, result.about, result.avatar, result._id);
     popupAvatarEdit.close();
-  });
+  })
+  .catch(printError);
 });
 
 const avatarValidator = new FormValidator(settings, popupAvatarForm);
