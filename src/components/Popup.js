@@ -8,11 +8,11 @@ export default class Popup {
   // Содержит публичные методы open и close, которые отвечают за открытие и закрытие попапа.
   open() {
     this._popup.classList.add("popup_opened");
-    document.addEventListener("keydown", this._handleEscClose);
+    this._setEventListeners();
   }
   close() {
     this._popup.classList.remove("popup_opened");
-    document.removeEventListener("keydown", this._handleEscClose);
+    this._removeEventListeners();
   }
 
   // Содержит приватный метод _handleEscClose, который содержит логику закрытия попапа клавишей Esc.
@@ -23,21 +23,22 @@ export default class Popup {
     }
   };
 
- _removeEventListeners = (evt) => {
+  _handleCrossAndOverlayClose = (evt) => {
     if (evt.target.classList.contains("popup__close")) {
       this.close();
-      document.removeEventListener("keydown", this._handleEscClose);
-      this._popup.removeEventListener("mousedown", this._removeEventListeners);
     }
     if (evt.target === this._popup) {
       this.close();
-      document.removeEventListener("keydown", this._handleEscClose);
-      this._popup.removeEventListener("mousedown", this._removeEventListeners);
-
     }
   };
 
-  setEventListeners() {
-      this._popup.addEventListener("mousedown", this._removeEventListeners);
+  _setEventListeners() {
+    document.addEventListener("keydown", this._handleEscClose);
+    this._popup.addEventListener("mousedown", this._handleCrossAndOverlayClose);
+  }
+
+  _removeEventListeners() {
+    document.removeEventListener("keydown", this._handleEscClose);
+    this._popup.removeEventListener("mousedown", this._handleCrossAndOverlayClose);
   }
 }

@@ -46,12 +46,10 @@ const userInfo = new UserInfo(username, description, ava);
 buttonAdd.addEventListener("click", function () {
   cardValidator.disableButton();
   popupFormAddCard.open();
-  popupFormAddCard.setEventListeners();
 });
 
 avatarBase.addEventListener("click", function () {
   popupAvatarEdit.open();
-  popupAvatarEdit.setEventListeners();
 });
 
 // Сбор параметров профиля со страницы
@@ -60,7 +58,6 @@ buttonEdit.addEventListener("click", function () {
   nameEdit.value = infoObject.name;
   descriptionEdit.value = infoObject.about;
   popupProfileEdit.open();
-  popupProfileEdit.setEventListeners();
 });
 
 Promise.all([api._getMyInformation(), api._getInitialCards()])
@@ -128,7 +125,7 @@ const popupProfileEdit = new PopupWithForm("#popup_edit", (inputs) => {
       popupProfileEdit.submitButton.textContent =
         popupProfileEdit.submitButtonDefaultText;
     });
-});
+}, settings);
 
 // Экземпляр PopupWithForm для добавления карточки
 const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
@@ -143,7 +140,7 @@ const popupFormAddCard = new PopupWithForm("#popup_add", (inputs) => {
       popupFormAddCard.submitButton.textContent =
         popupFormAddCard.submitButtonDefaultText;
     });
-});
+}, settings);
 
 // Экземпляр PopupWithForm для обновления аватара
 const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
@@ -163,7 +160,7 @@ const popupAvatarEdit = new PopupWithForm("#popup_avatar", (inputs) => {
       popupAvatarEdit.submitButton.textContent =
         popupAvatarEdit.submitButtonDefaultText;
     });
-});
+}, settings);
 
 const avatarValidator = new FormValidator(settings, popupAvatarForm);
 const addValidator = new FormValidator(settings, formEdit);
