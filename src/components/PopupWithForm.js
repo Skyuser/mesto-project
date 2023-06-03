@@ -1,10 +1,9 @@
 import Popup from "./Popup.js";
-import { settings } from "../pages/index.js";
 
 // Создайте класс PopupWithForm, который наследуется от Popup
 export default class PopupWithForm extends Popup {
   // Класс PopupWithForm принимает в конструктор селектор попапа и колбэк сабмита формы. В этом колбэке содержится метод класса Api.
-  constructor(selector, submitForm) {
+  constructor(selector, submitForm, settings) {
     super(selector);
 
     // переопределяем область видимости submitForm
