@@ -1,90 +1,84 @@
-const config = {
-    baseUrl: 'https://mesto.nomoreparties.co/v1/plus-cohort-22',
-    headers: {
-      authorization: '0084e260-948c-41b3-ba88-e14a4fb1558a',
-      'Content-Type': 'application/json'
+export default class Api {
+  constructor(options) {
+    this._baseUrl = options.baseUrl,
+    this._headers = options.headers
     }
-  }
 
-  function checkResponse(res) {   
-    if (res.ok) {
-      return res.json();
+  _checkResponse(res) {   
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
     }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  }
-  
-  function checker(url, data) {
-    return fetch(url, data)
-        .then(checkResponse)
-  }
+    
+  _checker(url, data) {
+      return fetch(url, data)
+          .then(this._checkResponse)
+    }
 
-  function printError(err) {
-    console.log(`Ошибка: ${err}`);
-  }
-
-  function getInitialCards() {
-    return checker(`${config.baseUrl}/cards`, {
-      headers: config.headers
-    })
-  }
-  
-  function getMyInformation() {
-    return checker(`${config.baseUrl}/users/me`, {
-      headers: config.headers
-    })
-  }
-
-  function updateMyInformation(username, userabout) {
-    return checker(`${config.baseUrl}/users/me`, {
-      method: 'PATCH',
-      headers: config.headers,
-      body: JSON.stringify({
-        name: username,
-        about: userabout
+  _getInitialCards() {
+    return this._checker(`${this._baseUrl}/cards`, {
+        headers: this._headers
       })
-    })
-  }
-
-  function postNewCard(name, link) {
-    return checker(`${config.baseUrl}/cards`, {
-       method: 'POST',
-       headers: config.headers,
-       body: JSON.stringify({
-        name: name,
-        link: link
-       }) 
-    })
-  }
-
-  function deleteCard(cardId) {
-    return checker(`${config.baseUrl}/cards/${cardId}`, {
-      method: 'DELETE',
-      headers: config.headers
-    })
-  }
-
-  function putLikeCard(cardId) {
-    return checker(`${config.baseUrl}/cards/likes/${cardId}`, {
-      method: 'PUT',
-      headers: config.headers
-    })
-  }
-  
-  function deleteLikeCard(cardId) {
-    return checker(`${config.baseUrl}/cards/likes/${cardId}`, {
-      method: 'DELETE',
-      headers: config.headers
-    })
-  }
-
-  function updateAvatar(avatar) {
-    return checker(`${config.baseUrl}/users/me/avatar`, {
-      method: 'PATCH',
-      headers: config.headers,
-      body: JSON.stringify({
-        avatar: avatar
+    }
+    
+  _getMyInformation() {
+    return this._checker(`${this._baseUrl}/users/me`, {
+        headers: this._headers
       })
-    })
-  }
-
-  export { getInitialCards, getMyInformation, updateMyInformation, postNewCard, deleteCard, putLikeCard, deleteLikeCard, updateAvatar, printError }
+    }
+  
+  updateMyInformation(data) {
+    return this._checker(`${this._baseUrl}/users/me`, {
+        method: 'PATCH',
+        headers: this._headers,
+        body: JSON.stringify({
+          name: data.name,
+          about: data.description,
+        })
+      })
+    }
+  
+  postNewCard(data) {
+    return this._checker(`${this._baseUrl}/cards`, {
+         method: 'POST',
+         headers: this._headers,
+         body: JSON.stringify({
+          name: data.linkname,
+          link: data['url-img'],
+         }) 
+      })
+    }
+  
+  deleteCard(cardId) {
+    return this._checker(`${this._baseUrl}/cards/${cardId}`, {
+        method: 'DELETE',
+        headers: this._headers
+      })
+    }
+  
+  putLikeCard(cardId) {
+    return this._checker(`${this._baseUrl}/cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: this._headers
+      })
+    }
+    
+  deleteLikeCard(cardId) {
+    return this._checker(`${this._baseUrl}/cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: this._headers
+      })
+    }
+  
+  updateAvatar(data) {
+    return this._checker(`${this._baseUrl}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: this._headers,
+        body: JSON.stringify({
+          avatar: data.avatar
+        })
+      })
+    }
+}
+  

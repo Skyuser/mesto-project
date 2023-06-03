@@ -1,69 +1,80 @@
-import { popupPhoto, popupPhotoUrl, popupPhotoText, templateCard } from '../pages/index.js';
-import { openPopup } from '../components/modal.js'
-import { deleteCard, putLikeCard, deleteLikeCard, printError } from '../components/api.js'
-
-function loadInitials (card, user) {
-    const cardElement = templateCard.querySelector('.element').cloneNode(true);
-    const templateName = cardElement.querySelector('.element__name');
-    const templateImage = cardElement.querySelector('.element__image');
-    const templateLike = cardElement.querySelector('.element__like')
-    const templateDelete = cardElement.querySelector('.element__delete-button')
-    const likesValue = cardElement.querySelector('.element__likes-value')
-
-    likesValue.textContent = card.likes.length;
-
-    templateImage.addEventListener('click',function(evt) {
-        showPhoto(card, user)
-    });
-
-    card.likes.forEach((like) => {
-        if(like._id === user) {
-            templateLike.classList.add('element__like_active')
+export default class Card {
+    constructor(data, user, selector, {
+      handleDelete,
+      handleClick,
+      handleLike
+    }) {
+      this._name = data.name;
+      this._link = data.link;
+      this._like = data.likes;
+      this._card = data.card;
+      this._cardId = data._id;
+      this._id = data.owner._id;
+      this.id = user;
+      this._templateCard = selector;
+      this._handleLike = handleLike;
+      this._handleDelete = handleDelete;
+      this._handleClick = handleClick;
+    }
+  
+    _createElement() {
+      const elementsClone = document.querySelector(this._templateCard).content.querySelector('.element').cloneNode(true);
+      return elementsClone;
+    }
+  
+    generate() {
+      this._element = this._createElement();
+      this._element.querySelector('.element__image').src = this._link;
+      this._element.querySelector('.element__image').alt = this._name;
+      this._element.querySelector('.element__name').textContent = this._name;
+      this._deleteButton = this._element.querySelector('.element__delete-button');
+      this._likeCount = this._element.querySelector('.element__likes-value');
+      this._likeCount.textContent = this._like.length;
+      this._likeButton = this._element.querySelector('.element__like');
+      this._imageButton = this._element.querySelector('.element__image');
+      this._isLiked();
+      this._setDeleteButton();
+      this._setEventListeners();
+      return this._element;
+    }
+  
+    _isLiked() {
+      this._like.forEach(element => {
+        if (this.id == element._id) {
+          this._likeButton.classList.add('element__like_active');
         }
-    })
-
-    if(user !== card.owner._id) {
-        templateDelete.classList.add('element__delete-button_disabled')
+      });
+    }
+  
+    _deleteCard(){
+      this._element.remove();
+    }
+  
+    _handleAddLike(data) {
+      this._likes = data.likes;
+      this._likeButton.classList.toggle('element__like_active');
+      this._likeCount.textContent = this._likes.length;
+    }
+  
+    _handleRemoveLike(data) {
+      this._likes = data.likes;
+      this._likeButton.classList.remove('element__like_active');
+      this._likeCount.textContent = this._likes.length;
     }
 
-    templateDelete.addEventListener('click', function(){
-        deleteCard(card._id)
-            .then((res) => {
-                cardElement.remove(res);
-            })
-            .catch(printError)
-    })
-
-    templateLike.addEventListener('click', function (evt) {
-        if(!evt.target.classList.contains('element__like_active')){
-            putLikeCard(card._id)
-            .then((res) => {
-                evt.target.classList.toggle('element__like_active')
-                likesValue.textContent = res.likes.length;
-            })
-            .catch(printError)
-        } else {
-            deleteLikeCard(card._id)
-            .then((res) => {
-                evt.target.classList.remove('element__like_active')
-                likesValue.textContent = res.likes.length;
-            })
-            .catch(printError)
-        }
-    })
-
-    templateImage.src = card.link;
-    templateImage.alt = card.name;
-    templateName.textContent = card.name;
-
-    return cardElement;
-}
-
-function showPhoto(card) {
-    popupPhotoUrl.src = card.link;
-    popupPhotoUrl.alt = card.name;
-    popupPhotoText.textContent = card.name;
-    openPopup(popupPhoto);
-}
-
-export { loadInitials, showPhoto }
+    _setDeleteButton() {
+      if (this.id !== this._id) {
+        this._deleteButton.classList.add('element__delete-button_disabled');
+      }
+    }
+  
+    _checkActiveClass() {
+      return this._likeButton.classList.contains('element__like_active');
+    }
+  
+    _setEventListeners() {
+      this._likeButton.addEventListener('click', () => this._handleLike(this._cardId, this.id));
+      this._deleteButton.addEventListener('click', () => this._handleDelete(this._cardId));
+      this._imageButton.addEventListener('click', () => this._handleClick(this._link, this._name));
+    }
+  }
